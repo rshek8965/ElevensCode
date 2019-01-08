@@ -16,7 +16,9 @@ public class Deck {
     /**
      * cards contains all the cards in the deck.
      */
-    private List<Card> cards;
+//    private List<Card> cards;
+    private ArrayList<Card>unDealt;
+    private ArrayList<Card>Dealt;
 
     /**
      * size is the number of not-yet-dealt cards.
@@ -35,7 +37,18 @@ public class Deck {
      * @param values is an array containing all of the card point values.
      */
     public Deck(String[] ranks, String[] suits, int[] values) {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
+        unDealt = new ArrayList<>();
+        Dealt = new ArrayList<>();
+        for(int i=0;i<ranks.length;i++)
+        {
+            for(int j=0;j<suits.length;j++)
+            {
+                for(int k=0;k<values.length;k++)
+                {
+                    unDealt.add(new Card(ranks[i],suits[j],values[k]));
+                }
+            }
+        }
     }
 
 
@@ -44,7 +57,10 @@ public class Deck {
      * @return true if this deck is empty, false otherwise.
      */
     public boolean isEmpty() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
+        if (unDealt.size()==0) {
+            return true;
+        }
+        else return false;
     }
 
     /**
@@ -52,7 +68,7 @@ public class Deck {
      * @return the number of undealt cards in this deck.
      */
     public int size() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
+        return unDealt.size();
     }
 
     /**
@@ -60,7 +76,19 @@ public class Deck {
      * and reset the size to represent the entire deck.
      */
     public void shuffle() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 4 *** */
+        unDealt.addAll(Dealt);
+        while(Dealt.size()>0)
+        {
+            Dealt.remove(0);
+        }
+        for(int i=unDealt.size()-1;i>0;i--)
+        {
+            int pos = (int) (Math.random() * i);
+            Card temp = unDealt.get(i);
+            unDealt.set(i,unDealt.get(i));
+            unDealt.set(pos,temp);
+
+        }
     }
 
     /**
@@ -69,7 +97,14 @@ public class Deck {
      *         previously dealt.
      */
     public Card deal() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
+        if(unDealt.size()>0)
+        {
+            Card temp = unDealt.get(0);
+            Dealt.add(temp);
+            unDealt.remove(0);
+            return temp;
+        }
+        return null;
     }
 
     /**
@@ -81,7 +116,7 @@ public class Deck {
         String rtn = "size = " + size + "\nUndealt cards: \n";
 
         for (int k = size - 1; k >= 0; k--) {
-            rtn = rtn + cards.get(k);
+            rtn = rtn + unDealt.get(k);
             if (k != 0) {
                 rtn = rtn + ", ";
             }
@@ -92,12 +127,12 @@ public class Deck {
         }
 
         rtn = rtn + "\nDealt cards: \n";
-        for (int k = cards.size() - 1; k >= size; k--) {
-            rtn = rtn + cards.get(k);
+        for (int k = Dealt.size() - 1; k >= size; k--) {
+            rtn = rtn + Dealt.get(k);
             if (k != size) {
                 rtn = rtn + ", ";
             }
-            if ((k - cards.size()) % 2 == 0) {
+            if ((k - Dealt.size()) % 2 == 0) {
                 // Insert carriage returns so entire deck is visible on console.
                 rtn = rtn + "\n";
             }
